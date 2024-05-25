@@ -1,0 +1,38 @@
+create table talaba(id serial primariy key,name varchar, kurs int,age int);
+
+insert into talaba(name,kurs,age) values('John', 2, 20),
+    ('Alice', 3, 21),
+    ('Bob', 1, 19),
+    ('Emily', 4, 22),
+    ('Michael', 2, 20),
+    ('Sophia', 3, 21),
+    ('David', 1, 19),
+    ('Emma', 4, 22),
+    ('James', 2, 20),
+    ('Olivia', 3, 21);
+
+
+--Update buyrug'i row ning wiymatiniozgartirishda ishlatiladi
+Update talaba
+set kurs=4
+where id=5;
+
+
+-- delete bu tabelmi row lae=rini ochrishda ishlatiladi agar shrt bermsak tableni n=barcha rovlarini ochirib bosh tablega aylantirin qoyadi.
+
+delete from talaba
+where id=4;
+
+
+-- group by bu biz tanlagan colun=b boyicha guruhlab beradi bu faqat 1 marttalik yani adnorazviy boladi ;
+
+SELECT array_agg(name),array_agg( kurs)
+FROM talaba
+GROUP BY age;
+
+
+--order by bu ozigi kiritilgan colum boyicha tartiblab beradi agar dasc ishlatilsa teskari tartib;aydi
+
+SELECT * from talaba order by age;
+
+
