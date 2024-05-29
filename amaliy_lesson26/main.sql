@@ -193,7 +193,7 @@ VALUES
     ('2e3d16c2-96fb-4569-a410-c6861c0e3169', 85),
     ('057df5b9-2f15-4cf2-af08-02ad2a83a875', 90);
 
---2-savol
+--2-task
 select
     c.name,
     array_agg (s2.name),
@@ -219,7 +219,7 @@ from
 group by
     c.name;
 
--- 3-savol
+-- 3-task
 select
     c.name,
     round(avg(g.ball))
@@ -231,7 +231,7 @@ from
 group by
     c.name;
 
--- 4-savols
+-- 4-yask
 select
     c.name,
     array_agg (s2.name) as name,
@@ -257,7 +257,7 @@ from
 group by
     c.name;
 
--- 5-misol
+-- 5-task 
 select
     c.name,
     array_agg (g.ball)
