@@ -46,7 +46,7 @@ func main() {
 		panic(err)
 	}
 	
-	_, err = db.Exec("insert into student(id, name, age) values ($1, $2, $3)",
+	_ , err = db.Exec("insert into student(id, name, age) values ($1, $2, $3)",
 		uuid.NewString(), "Ibrohim",6)
 	if err != nil {
 		panic(err)
