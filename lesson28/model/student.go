@@ -6,3 +6,7 @@ type User struct {
 	Age    int
 
 }
+
+type Users struct{
+	User []User
+}
