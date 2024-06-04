@@ -1,8 +1,10 @@
 package crud
 
 import (
-	"gorm.io/gorm"
 	"my_mod/model"
+	"os/user"
+
+	"gorm.io/gorm"
 )
 
 type UserDb struct {
@@ -13,20 +15,25 @@ func UserRepo(db gorm.DB) UserDb {
 	return UserDb{Db: db}
 }
 
-func CreateS(db gorm.DB, user model.Users) {
+func (u *UserDb) GetAllStudents() ([]model.Users) {
+	user :=[]model.Users{}
 	
-	db.Create(&model.Users{First_name: "ali",
-			LastName:   "vali",
-			Email:      "erfgbdgf",
-			Password:   "sfdgr",
-			Age:        23,
-			Field:      "efsdg",
-			Gender:     "dfdger",
-			IsEmployee: true})
 }
 
-func Read(db gorm.DB, user model.Users)  (*model.Users) {
-	
+func CreateS(db gorm.DB, user model.Users) {
+
+	db.Create(&model.Users{First_name: "ali",
+		LastName:   "vali",
+		Email:      "erfgbdgf",
+		Password:   "sfdgr",
+		Age:        23,
+		Field:      "efsdg",
+		Gender:     "dfdger",
+		IsEmployee: true})
+}
+
+func Read(db gorm.DB, user model.Users) *model.Users {
+
 	db.First(&user)
 	return &user
 
@@ -38,7 +45,7 @@ func Update(db gorm.DB, user model.Users) {
 }
 
 func Delete(db gorm.DB, user model.Users) {
-	
+
 	db.Where("age = ?", "23").Delete(&model.Users{})
 
 }
