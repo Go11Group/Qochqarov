@@ -6,11 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	//"github.com/bxcodec/faker"
-	//"github.com/bxcodec/faker/v3"
-	//"github.com/go-faker/faker/v3"
-
-	//"github.com/go-faker/faker/v4"
 	_ "github.com/lib/pq"
 )
 
@@ -42,12 +37,12 @@ func main() {
 	// 	}
 	// }
 	var querys string
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
+	db.SetMaxOpenConns(3)
+	db.SetMaxIdleConns(3)
 	for i := 0; i < 300; i++ {
 		go func() {
 			curs := rand.Intn(5)
-			age := rand.Intn(100)
+			age := rand.Intn(100)																																		
 			t := time.Now()
 			err := db.QueryRow("select count(1) from persons where courdse=$1 and age=$2", curs, age).Scan(&querys)
 			if err != nil {
@@ -57,6 +52,6 @@ func main() {
 
 		}()
 	}
-	time.Sleep(5 * time.Second)
+	time.Sleep(10 * time.Second)
 
 }
