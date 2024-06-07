@@ -28,41 +28,39 @@ func (p *ProductRepo) C_Create(product model.Product) error {
 	return nil
 }
 
-// func C_Read(db *sql.DB, product model.Product) error {
-// 	rows, err := db.Query("select * from product;")
-// 	if err != nil {
-// 		return err
-// 	}
+func (pa *ProductRepo) C_Read(product model.Product) ([]model.Product,error) {
+	rows, err := pa.Db.Query("select * from product;")
+	if err != nil {
+		return nil,err
+	}
 
-// 	for rows.Next() {
-// 		err = rows.Scan(&product.Id, &product.Name, &product.Price, &product.Year)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		fmt.Println(product)
-// 	}
+	var p []model.Product
+	for rows.Next() {
+		 err = rows.Scan(&product.Id, &product.Name, &product.Price,&product.Year)
+		if err != nil {
+			return nil,err
+		}
+		p=append(p, product)
+		}
+	return p,nil
+}
 
-// 	return nil
+func (p *ProductRepo)C_Update( year int,name string) error {
 
-// }
+	_, err := p.Db.Exec("update product set name=$1 where year=$2 ", name, year)
+	if err != nil {
+		return err
+	}
 
-// func C_Update(db *sql.DB, curse model.Product, id string) error {
-// 	new_name := "gilos"
+	return nil
+}
 
-// 	_, err := db.Exec("update product set name=$1 where id=&2 ", new_name, id)
-// 	if err != nil {
-// 		return err
-// 	}
+func (p ProductRepo) C_Delete(year int) error {
 
-// 	return nil
-// }
+	_, err := p.Db.Exec("delete from product where year=$1", year)
+	if err != nil {
+		return err
+	}
 
-// func C_Delete(db *sql.DB, id string) error {
-
-// 	_, err := db.Exec("delete from product where id=$1", id)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+	return nil
+}

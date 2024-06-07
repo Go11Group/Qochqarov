@@ -13,7 +13,7 @@ type Handler struct {
 func NewHandler(handler Handler) *http.Server {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("POST /api/product", handler.Products)
+	mux.HandleFunc("DELETE /api/product", handler.Products)
 
 	return &http.Server{
 		Addr:    ":8080",
