@@ -2,7 +2,6 @@ package crud
 
 import (
 	"my_mod/model"
-	"os/user"
 
 	"gorm.io/gorm"
 )
@@ -15,9 +14,9 @@ func UserRepo(db gorm.DB) UserDb {
 	return UserDb{Db: db}
 }
 
-func (u *UserDb) GetAllStudents() ([]model.Users) {
-	user :=[]model.Users{}
-	
+func (u *UserDb) GetAllStudents() []model.Users {
+	user := []model.Users{}
+	return user
 }
 
 func CreateS(db gorm.DB, user model.Users) {
