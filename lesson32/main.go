@@ -43,19 +43,16 @@ func handleConnection(conn net.Conn) {
 
 		fmt.Print("Received message: ", string(message))
 		message = message[:len(message)-1]
-		//  _, err = conn.Write([]byte(strings.ToUpper(message) + " FROM SERVER!\n"))
-		//  if err != nil {
-			//  	fmt.Println("Error writing message:", err)
-			// 	return
 			clin(message, conn)
-		// }
 	}
 }
 
 func clin(message string, con net.Conn) {
+	// var name string
+	// fmt.Scan(&name)
 	for _, v := range clients {
 		if v != con {
-			_, err := v.Write([]byte(strings.ToUpper(message) + " FROM SERVER!\n"))
+			_, err := v.Write([]byte(strings.ToUpper(message) + "FROM  SERVER\n"))
 			if err != nil {
 				panic(err)
 				
@@ -65,14 +62,3 @@ func clin(message string, con net.Conn) {
 
 }
 
-// func broadcast(message string, sender net.Conn) {
-// 	for _, client := range clients {
-// 		if client != sender {
-// 			_, err := client.Write([]byte(strings.ToUpper(message) + " FROM SERVER!\n"))
-// 			if err != nil {
-// 				fmt.Println("Error broadcasting message:", err)
-// 				continue
-// 			}
-// 		}
-// 	}
-// }
