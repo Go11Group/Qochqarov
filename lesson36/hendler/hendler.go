@@ -26,10 +26,11 @@ func NewHandler(handler *Handler) *gin.Engine {
 	router.PUT("/problem",handler.P_Put)
 	router.DELETE("/problem",handler.P_Delete)
 	
-	// SOLVED UCHUNrouter.GET("/user",handler.Gets)
-	router.POST("/user",handler.Post)
-	router.PUT("/user",handler.Put)
-	router.DELETE("/user",handler.Delete)
+	// SOLVED UCHUN
+	// router.GET("/user",handler.Gets)
+	// router.POST("/user",handler.Post)
+	// router.PUT("/user",handler.Put)
+	// router.DELETE("/user",handler.Delete)
 	
 
 	router.GET("/solved",handler.S_Gets)
@@ -39,4 +40,8 @@ func NewHandler(handler *Handler) *gin.Engine {
 	
 	router.Run(":8090")
 	return router
+// 	return &http.Server{
+// 		Addr: ":8080",
+// 		Handler: router,
+// 	}
 }
