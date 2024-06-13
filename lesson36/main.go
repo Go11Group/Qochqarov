@@ -2,7 +2,7 @@ package main
 
 import (
 	handler "my_mod/hendler"
-	"my_mod/storage"
+	postgres "my_mod/storage"
 )
 
 func main() {
