@@ -1,5 +1,6 @@
 package model
 
+//lessonni filter qilsih ucun ishlatilgan struct
 type UpdateLesson struct {
 	LessonId *string 
 	Title     *string
@@ -7,6 +8,7 @@ type UpdateLesson struct {
 	Content   *string
 }
 
+//enrolmentsni filter qilsih ucun ishlatilgan struct
 type UpdateEnrol struct {
 	EnrolId        *string
 	UserId         *string
@@ -14,11 +16,16 @@ type UpdateEnrol struct {
 	EnrollmentDate *string
 }
 
+//coursesi filter qilsih ucun ishlatilgan struct
+
 type UpdateCourse struct {
 	CourseId   *string
 	Title       *string
 	Description *string
 }
+
+
+//lessonni filter qilsih ucun ishlatilgan struct
 
 type UpdateUser struct {
 	UserId  *string

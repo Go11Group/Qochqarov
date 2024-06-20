@@ -8,11 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// bu api dagi usersning barchasini royharini chiqarib beradi
+
 func (h *Handler) UserGets(c *gin.Context) {
 	var users model.Users
 	user, err := h.Userss.UserRead(users)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": " USER MALUMOTLARINI CHIQARISHFA HATOLIK"})
 	}
 
 	for _, v := range user {
@@ -20,40 +22,50 @@ func (h *Handler) UserGets(c *gin.Context) {
 	}
 }
 
+//bu api yangi users databasesga qoshib beradi
+
 func (h *Handler) UserPost(c *gin.Context) {
 	var users model.Users
-	c.BindJSON(&users)
+	fmt.Println(c.BindJSON(&users))
+	_, err := h.Userss.UserCreate(users)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": " USERGA MALUMOT QOSHISHDA HATOLIK"})
+	}
 	c.JSON(200, users)
-	h.Userss.UserCreate(users)
 
 }
+
+//bu api usersi databazedagi malumotni id boyicha update qiladi
 
 func (h *Handler) UserPut(c *gin.Context) {
 	var users model.UpdateUser
 	c.BindJSON(&users)
-	c.JSON(200, users)
-	h.Userss.UserUpdate(users)
-
-}
-
-func (h *Handler) UserDelete(c *gin.Context){
-	id:=c.Param("id")
-	
-	err:=h.Userss.UserDelete(id)
+	err := h.Userss.UserUpdate(users)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": " USETRNI  MALUMOTLARINI YANGILASHDA HATOLIK"})
 	}
-	
 
 }
+
+// bu api id boyicha databasesdagi userslarni ochiradi
+
+func (h *Handler) UserDelete(c *gin.Context) {
+	id := c.Param("id")
+
+	err := h.Userss.UserDelete(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": " USERNI MALUMOTLARINI OCJHIRISHDA HATOLIK"})
+	}
+}
+
+//bu api da databasesdagi malumotni qaysi birlari boyicha filter qilish kk bolsa osha malunmotlarni qaytaradi
 
 func (h *Handler) GetAllUsers(c *gin.Context) {
-	fmt.Println("salom")
 	var users model.UserGetAll
 	c.BindJSON(&users)
 	user, err := h.Userss.GetAllUsers(users)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "  USERNI FILTERLAB CHIQARISHDA HATOLIK"})
 	}
 	c.JSON(200, user)
 

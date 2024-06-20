@@ -8,8 +8,6 @@ import (
 
 	pakage "my_mod/Pakage"
 	"my_mod/model"
-
-	"github.com/google/uuid"
 )
 
 type LessonRepo struct {
@@ -20,10 +18,13 @@ func NewLessonRepo(db *sql.DB) *LessonRepo {
 	return &LessonRepo{Db: db}
 }
 
+//bu metod databasesdagi lessons tablega yangi malumot qoshish ucun ishlatiladi
+
 func (p *LessonRepo) LessonCreate(lessons model.Lessons) error {
 
-	_, err := p.Db.Exec("insert into LESSONS(id,course_id,title,Content,create_at,update_at) values($1,$2,$3,$4,$5,$6)",
-		uuid.NewString, lessons.CourseId, lessons.Title, lessons.Content, time.Now(), time.Now())
+	_, err := p.Db.Exec("insert into LESSONS(course_id,title,Content,created_at,update_at) values($1,$2,$3,$4,$5)",
+		lessons.CourseId, lessons.Title, lessons.Content, time.Now(), time.Now())
+	fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -31,8 +32,10 @@ func (p *LessonRepo) LessonCreate(lessons model.Lessons) error {
 	return nil
 }
 
+//bu metod databasesdagi lessonsni  barcha malumot larini oqish ucun hizmat qiladi
+
 func (pa *LessonRepo) LessonRead(lessons model.Lessons) ([]model.Lessons, error) {
-	rows, err := pa.Db.Query("select Id,course_id,titlr, Content from lessons;")
+	rows, err := pa.Db.Query("select Id,course_id,title, Content from lessons;")
 	if err != nil {
 		return nil, err
 	}
@@ -48,17 +51,17 @@ func (pa *LessonRepo) LessonRead(lessons model.Lessons) ([]model.Lessons, error)
 	return p, nil
 }
 
+// bu method lessonsdagi malumotlarni kelgan malumotlari boyicha update qilish ucun ishlatiladi
+
 func (u *LessonRepo) LessonUpdate(lessonsUpdateFilter model.UpdateLesson) error {
 	var params []string
 	var args []interface{}
-	fmt.Println(*lessonsUpdateFilter.Content)
 	query := `
 	SELECT id
 	FROM lessons
 	WHERE delete_at IS NULL AND id = $1
 	`
-
-	if err := u.Db.QueryRow(query, lessonsUpdateFilter.LessonId).Err(); err != nil {
+	if err := u.Db.QueryRow(query, *lessonsUpdateFilter.LessonId).Err(); err != nil {
 		return fmt.Errorf("lessons by this id not found: %v", err)
 	}
 
@@ -81,7 +84,7 @@ func (u *LessonRepo) LessonUpdate(lessonsUpdateFilter model.UpdateLesson) error 
 		args = append(args, *lessonsUpdateFilter.Content)
 	}
 
-	params = append(params, fmt.Sprintf("updated_at = $%d", len(args)+1))
+	params = append(params, fmt.Sprintf("update_at = $%d", len(args)+1))
 	args = append(args, time.Now())
 
 	if len(params) == 0 {
@@ -89,19 +92,20 @@ func (u *LessonRepo) LessonUpdate(lessonsUpdateFilter model.UpdateLesson) error 
 	}
 
 	args = append(args, lessonsUpdateFilter.LessonId)
-	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at IS NULL", len(args))
+	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at =0", len(args))
 
 	fmt.Println("Executing query:", query)
 	fmt.Println("With arguments:", args)
 	_, err := u.Db.Exec(query, args...)
 
-	fmt.Println(query)
 	if err != nil {
 		return fmt.Errorf("failed executing query: %v", err)
 	}
 
 	return nil
 }
+
+// bu method lessonsdagi malumotni berikgan id boyicha ociradi
 
 func (u LessonRepo) LessonDeleted(id string) error {
 
@@ -124,6 +128,8 @@ func (u LessonRepo) LessonDeleted(id string) error {
 	return nil
 }
 
+//bu method lessons ni berilgan malumotlari boyicha filter qiuladi
+
 func (u *LessonRepo) GetAllLesson(f model.LessonGetAll) ([]model.Lessons, error) {
 	var (
 		params = make(map[string]interface{})
@@ -140,7 +146,7 @@ func (u *LessonRepo) GetAllLesson(f model.LessonGetAll) ([]model.Lessons, error)
 	}
 
 	if len(f.CourseId) > 0 {
-		params["bi"] = f.CourseId
+		params["courseId"] = f.CourseId
 		filter += " and CourseId = :courseId "
 	}
 

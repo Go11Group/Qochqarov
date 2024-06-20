@@ -8,8 +8,6 @@ import (
 
 	pakage "my_mod/Pakage"
 	"my_mod/model"
-
-	"github.com/google/uuid"
 )
 
 type CousresRepo struct {
@@ -20,10 +18,12 @@ func NewCourseRepo(db *sql.DB) *CousresRepo {
 	return &CousresRepo{Db: db}
 }
 
+// bu metod databasesdagi courses tablega yangi malumot qoshish ucun ishlatiladi
 func (p *CousresRepo) CoursCreate(course model.Courses) error {
 
-	_, err := p.Db.Exec("insert into course(id,title,Description,create_at,update_at) values($1,$2,$3,$4,$5)",
-		uuid.NewString, course.Title, course.Description, time.Now(), time.Now())
+	_, err := p.Db.Exec("insert into courses(title,Description,created_at,update_at) values($1,$2,$3,$4)",
+		course.Title, course.Description, time.Now(), time.Now())
+		fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -31,6 +31,7 @@ func (p *CousresRepo) CoursCreate(course model.Courses) error {
 	return nil
 }
 
+// bu metod databasesdagi coursesni  barcha malumot larini oqish ucun hizmat qiladi
 func (pa *CousresRepo) CoursRead(course model.Courses) ([]model.Courses, error) {
 	rows, err := pa.Db.Query("select Id,title, description from courses")
 	if err != nil {
@@ -48,7 +49,8 @@ func (pa *CousresRepo) CoursRead(course model.Courses) ([]model.Courses, error) 
 	return p, nil
 }
 
-func (u *CousresRepo) CoursUpdate(courseUpdateFilter model.UpdateCourse) error {
+// bu method coursesdagi malumotlarni kelgan malumotlari boyicha update qilish ucun ishlatiladi
+func (u *CousresRepo) CoursUpdate(courseUpdateFilter model.UpdateCourse) (sql.Result,error) {
 	var params []string
 	var args []interface{}
 	query := `
@@ -57,8 +59,8 @@ func (u *CousresRepo) CoursUpdate(courseUpdateFilter model.UpdateCourse) error {
 	WHERE delete_at IS NULL AND id = $1
 	`
 
-	if err := u.Db.QueryRow(query, courseUpdateFilter.CourseId).Err(); err != nil {
-		return fmt.Errorf("courses by this id not found: %v", err)
+	if err := u.Db.QueryRow(query, *courseUpdateFilter.CourseId).Err(); err != nil {
+		return nil,fmt.Errorf("courses by this id not found: %v", err)
 	}
 
 	query = `
@@ -79,44 +81,47 @@ func (u *CousresRepo) CoursUpdate(courseUpdateFilter model.UpdateCourse) error {
 	args = append(args, time.Now())
 
 	if len(params) == 0 {
-		return fmt.Errorf("no fields to update")
+		return nil,fmt.Errorf("no fields to update")
 	}
 
 	args = append(args, courseUpdateFilter.CourseId)
-	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at IS NULL", len(args))
+	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at =0", len(args))
 
 	fmt.Println("Executing query:", query)
 	fmt.Println("With arguments:", args)
-	_, err := u.Db.Exec(query, args...)
+	rows, err := u.Db.Exec(query, args...)
 
 	if err != nil {
-		return fmt.Errorf("failed executing query: %v", err)
+		return nil,fmt.Errorf("failed executing query: %v", err)
 	}
 
-	fmt.Println(query)
-	return nil
+	return rows,nil
 }
+
+// bu method coursesdagi malumotni berikgan id boyicha ociradi
 func (u CousresRepo) CoursDelete(id string) error {
 
 	_rows, err := u.Db.Exec(`update courses set
 	delete_at = date_part('epoch', current_timestamp)::INT
    where id = $1 and delete_at = 0`, id)
+	fmt.Println(err)
 	if err != nil {
 		return err
 	}
-	rowsaff,err:=_rows.RowsAffected()
+	rowsaff, err := _rows.RowsAffected()
 	if err != nil {
 		return nil
 	}
 
-	if rowsaff==0 {
+	if rowsaff == 0 {
 		return err
-		
+
 	}
 
 	return nil
 }
 
+// bu method courses ni berilgan malumotlari boyicha filter qiuladi
 func (u *CousresRepo) GetAllCourse(f model.CourseaGetAll) ([]model.Courses, error) {
 	var (
 		params = make(map[string]interface{})

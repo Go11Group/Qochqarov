@@ -1,43 +1,38 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
+// users ning structi
 type Users struct {
-	Id         string
-	Name       string
-	Email      string
-	Birthday   time.Time
-	Password   string
-	CreatedAt time.Time
-	UpdateAt  time.Time
-	DeleteAt  time.Time
+	Id       string
+	Name     string
+	Email    string
+	Birthday string
+
+	Password string
 }
 
+// coursesning structi
 type Courses struct {
 	Id          string
 	Title       string
 	Description string
-	CreatedAt  time.Time
-	UpdateAt   time.Time
-	DeleteAt   time.Time
 }
 
+// lessonsning structi
 type Lessons struct {
-	Id         string
-	Title      string
-	CourseId  string
-	Content    string
-	CreatedAt time.Time
-	UpdateAt  time.Time
-	Deletet  time.Time
+	Id       string
+	Title    string
+	CourseId string
+	Content  string
 }
 
+// enrolments ning structi
 type Enrollments struct {
-	Id              string
+	Id             string
 	UserId         string
 	CourseId       string
 	EnrollmentDate time.Time
-	CreatedAt      time.Time
-	UpdateAt       time.Time
-	DeleteAt       time.Time
 }

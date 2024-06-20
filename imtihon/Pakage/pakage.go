@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 )
+// bu funkisiya filterlardan ke;agan malumotlardagi ":" bilan boshlangalrni orniga $k ni qoyib beradi
 
 func ReplaceQueryParams(namedQuery string, params map[string]interface{}) (string, []interface{}) {
 	var (

@@ -8,8 +8,6 @@ import (
 
 	pakage "my_mod/Pakage"
 	"my_mod/model"
-
-	"github.com/google/uuid"
 )
 
 type UserRepo struct {
@@ -20,16 +18,22 @@ func NewProRepo(db *sql.DB) *UserRepo {
 	return &UserRepo{Db: db}
 }
 
-func (p *UserRepo) UserCreate(user model.Users) error {
+//bu metod databasesdagi users tablega yangi malumot qoshish ucun ishlatiladi
 
-	_, err := p.Db.Exec("insert into users(id,name,email,birthday,password,create_at,update_at) values($1,$2,$3,$4,$5,$6,$7)",
-		uuid.NewString, user.Name, user.Email, user.Birthday, user.Password, time.Now(), time.Now())
+func (p *UserRepo) UserCreate(user model.Users) (sql.Result, error) {
+
+	rows, err := p.Db.Exec("insert into users(name,email,birthday,password,created_at,update_at) values($1,$2,$3,$4,$5,$6)",
+		user.Name, user.Email, user.Birthday, user.Password, time.Now(), time.Now())
+	fmt.Println(err)
+
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return rows, nil
 }
+
+//bu metod databasesdagi usersni  barcha malumot larini oqish ucun hizmat qiladi
 
 func (pa *UserRepo) UserRead(user model.Users) ([]model.Users, error) {
 	rows, err := pa.Db.Query("select Id,Name, Email, Birthday, Password from users;")
@@ -48,6 +52,8 @@ func (pa *UserRepo) UserRead(user model.Users) ([]model.Users, error) {
 	return p, nil
 }
 
+// bu method usersdagi malumotlarni kelgan malumotlari boyicha update qilish ucun ishlatiladi
+
 func (u *UserRepo) UserUpdate(usersUpdateFilter model.UpdateUser) error {
 	var params []string
 	var args []interface{}
@@ -57,7 +63,7 @@ func (u *UserRepo) UserUpdate(usersUpdateFilter model.UpdateUser) error {
 	WHERE delete_at IS NULL AND id = $1
 	`
 
-	if err := u.Db.QueryRow(query, usersUpdateFilter.UserId).Err(); err != nil {
+	if err := u.Db.QueryRow(query, *usersUpdateFilter.UserId).Err(); err != nil {
 		return fmt.Errorf("users by this id not found: %v", err)
 	}
 
@@ -95,7 +101,7 @@ func (u *UserRepo) UserUpdate(usersUpdateFilter model.UpdateUser) error {
 	fmt.Println(len(args))
 
 	args = append(args, usersUpdateFilter.UserId)
-	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at IS NULL", len(args))
+	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at =0", len(args))
 
 	fmt.Println("Executing query:", query)
 	fmt.Println("With arguments:", args)
@@ -109,6 +115,8 @@ func (u *UserRepo) UserUpdate(usersUpdateFilter model.UpdateUser) error {
 	return nil
 }
 
+// bu method usersdagi malumotni berikgan id boyicha ociradi
+
 func (u *UserRepo) UserDelete(id string) error {
 	_rows, err := u.Db.Exec(`update users set
 	delete_at = date_part('epoch', current_timestamp)::INT
@@ -116,26 +124,27 @@ func (u *UserRepo) UserDelete(id string) error {
 	if err != nil {
 		return err
 	}
-	rowsaff,err:=_rows.RowsAffected()
+	rowsaff, err := _rows.RowsAffected()
 	if err != nil {
 		return nil
 	}
 
-	if rowsaff==0 {
+	if rowsaff == 0 {
 		return err
-		
+
 	}
 
 	return nil
 }
 
-func (u *UserRepo) GetAllUsers(f model.UserGetAll) ([]model.Users ,error) {
+//bu method users ni berilgan malumotlari boyicha filter qiuladi
+
+func (u *UserRepo) GetAllUsers(f model.UserGetAll) ([]model.Users, error) {
 	var (
 		params = make(map[string]interface{})
 		arr    []interface{}
 		filter string
 	)
-	fmt.Println("salom")
 
 	query := `SELECT id, name,email, birthday,password
 	FROM users WHERE true `
@@ -145,18 +154,16 @@ func (u *UserRepo) GetAllUsers(f model.UserGetAll) ([]model.Users ,error) {
 		filter += " and name = :name "
 	}
 
-	if f.Birthday !=nil{
-		params["bi"] = f.Birthday
+	if f.Birthday != nil {
+		params["birthday"] = f.Birthday
 		filter += " and birthday = :birthday "
 	}
 
-
-	
 	if f.Offset > 0 {
 		params["offset"] = f.Offset
 		filter += " OFFSET :offset"
 	}
-	
+
 	if f.Limit > 0 {
 		params["limit"] = f.Limit
 		filter += " LIMIT :limit"
@@ -174,7 +181,7 @@ func (u *UserRepo) GetAllUsers(f model.UserGetAll) ([]model.Users ,error) {
 	var users []model.Users
 	for rows.Next() {
 		var user model.Users
-		err := rows.Scan(&user.Id, &user.Name, &user.Email,&user.Birthday,&user.Password)
+		err := rows.Scan(&user.Id, &user.Name, &user.Email, &user.Birthday, &user.Password)
 
 		if err != nil {
 			return nil, err

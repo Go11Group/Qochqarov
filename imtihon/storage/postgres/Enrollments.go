@@ -8,8 +8,6 @@ import (
 
 	pakage "my_mod/Pakage"
 	"my_mod/model"
-
-	"github.com/google/uuid"
 )
 
 type EnrollmentsRepo struct {
@@ -20,10 +18,13 @@ func NewEnrollmentsRepo(db *sql.DB) *EnrollmentsRepo {
 	return &EnrollmentsRepo{Db: db}
 }
 
+//bu method databasesdagi enrolments tablega yangi malumot qoshish ucun ishlatiladi
+
 func (p *EnrollmentsRepo) EmrolCreate(enrol model.Enrollments) error {
 
-	_, err := p.Db.Exec("insert into Enrollments(id,user_id,course_id,enrollment_datet) values($1,$2,$3,$4)",
-		uuid.NewString, enrol.UserId, enrol.CourseId, enrol.EnrollmentDate)
+	_, err := p.Db.Exec("insert into Enrollments(user_id,course_id,enrollment_date,created_at,update_at) values($1,$2,$3,$4,$5)",
+		enrol.UserId, enrol.CourseId, enrol.EnrollmentDate, time.Now(), time.Now())
+		fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -31,15 +32,18 @@ func (p *EnrollmentsRepo) EmrolCreate(enrol model.Enrollments) error {
 	return nil
 }
 
+//bu method databasesdagi enrolmentsni  barcha malumot larini oqish ucun hizmat qiladi
+
 func (pa *EnrollmentsRepo) EmrolRead(enrol model.Enrollments) ([]model.Enrollments, error) {
-	rows, err := pa.Db.Query("select Id,user_id,course_id,enrollment_date from Enrollments;")
+	rows, err := pa.Db.Query("select Id,user_id,course_id,enrollment_date from Enrollments ;")
 	if err != nil {
 		return nil, err
 	}
-
+	
 	var p []model.Enrollments
 	for rows.Next() {
-		err = rows.Scan(&enrol.Id, &enrol.UserId, &enrol.CourseId, enrol.EnrollmentDate)
+		err = rows.Scan(&enrol.Id, &enrol.UserId, &enrol.CourseId, &enrol.EnrollmentDate)
+		fmt.Println(err)
 		if err != nil {
 			return nil, err
 		}
@@ -47,6 +51,8 @@ func (pa *EnrollmentsRepo) EmrolRead(enrol model.Enrollments) ([]model.Enrollmen
 	}
 	return p, nil
 }
+
+// bu method enrolmentsdagi malumotlarni kelgan malumotlari boyicha update qilish ucun ishlatiladi
 
 func (u *EnrollmentsRepo) EmrolUpdate(enrolUpdateFilter model.UpdateEnrol) error {
 	var params []string
@@ -57,7 +63,7 @@ func (u *EnrollmentsRepo) EmrolUpdate(enrolUpdateFilter model.UpdateEnrol) error
 	WHERE delete_at IS NULL AND id = $1
 	`
 
-	if err := u.Db.QueryRow(query, enrolUpdateFilter.EnrolId).Err(); err != nil {
+	if err := u.Db.QueryRow(query, *enrolUpdateFilter.EnrolId).Err(); err != nil {
 		return fmt.Errorf("enrollments by this id not found: %v", err)
 	}
 
@@ -88,7 +94,7 @@ func (u *EnrollmentsRepo) EmrolUpdate(enrolUpdateFilter model.UpdateEnrol) error
 	}
 
 	args = append(args, enrolUpdateFilter.EnrolId)
-	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at IS NULL", len(args))
+	query += strings.Join(params, ", ") + fmt.Sprintf(" WHERE id = $%d AND delete_at =0", len(args))
 
 	fmt.Println("Executing query:", query)
 	fmt.Println("With arguments:", args)
@@ -102,6 +108,8 @@ func (u *EnrollmentsRepo) EmrolUpdate(enrolUpdateFilter model.UpdateEnrol) error
 	return nil
 }
 
+// bu method enrolmentsdagi malumotni berikgan id boyicha ociradi
+
 func (u EnrollmentsRepo) EmrolDelete(id string) error {
 
 	_rows, err := u.Db.Exec(`update enrollments set
@@ -110,18 +118,20 @@ func (u EnrollmentsRepo) EmrolDelete(id string) error {
 	if err != nil {
 		return err
 	}
-	rowsaff,err:=_rows.RowsAffected()
+	rowsaff, err := _rows.RowsAffected()
 	if err != nil {
 		return nil
 	}
 
-	if rowsaff==0 {
+	if rowsaff == 0 {
 		return err
-		
+
 	}
 
 	return nil
 }
+
+//bu method enrolments ni berilgan malumotlari boyicha filter qiuladi
 
 func (u *EnrollmentsRepo) GetAllEnrol(f model.EnrolGetAll) ([]model.Enrollments, error) {
 	var (
@@ -171,7 +181,7 @@ func (u *EnrollmentsRepo) GetAllEnrol(f model.EnrolGetAll) ([]model.Enrollments,
 	var enrols []model.Enrollments
 	for rows.Next() {
 		var enrol model.Enrollments
-		err := rows.Scan(&enrol.Id,  &enrol.UserId, &enrol.CourseId, &enrol.EnrollmentDate)
+		err := rows.Scan(&enrol.Id, &enrol.UserId, &enrol.CourseId, &enrol.EnrollmentDate)
 
 		if err != nil {
 			return nil, err
