@@ -20,7 +20,7 @@ func NewHandler(handler *Handler) *gin.Engine {
 	router.GET("/user", handler.UserGets)
 	router.POST("/user", handler.UserPost)
 	router.PUT("/user", handler.UserPut)
-	router.DELETE("/user/:id", handler.UserDelete)
+	router.DELETE("/user", handler.UserDelete)
 	router.GET("/userall", handler.GetAllUsers)
 
 	// course bn ishlash API
@@ -44,13 +44,13 @@ func NewHandler(handler *Handler) *gin.Engine {
 	router.DELETE("/enrol/:id", handler.EmrolDelete)
 	router.GET("/enrolall", handler.GetAllEnrolments)
 
-	//qoshimcha apilar 
+	//qoshimcha apilar
 
-	router.GET("/CoursesbyUsers/:id",handler.GetCoursesbyUsersApi)
-	router.GET("/lessonsbyCourse/:id",handler.GetLessonsbyCourseApi)
-	router.GET("/enrolledUsersbyCourse/:id",handler.GetEnrolledUsersbyCourseApi)
-	router.GET("/searchUser/",handler.SearchUsersApi)
-	router.GET("/getMost/",handler.GetMostPopularCourses)
+	router.GET("/CoursesbyUsers/:id", handler.GetCoursesbyUsersApi)
+	router.GET("/lessonsbyCourse/:id", handler.GetLessonsbyCourseApi)
+	router.GET("/enrolledUsersbyCourse/:id", handler.GetEnrolledUsersbyCourseApi)
+	router.GET("/searchUser/", handler.SearchUsersApi)
+	router.GET("/getMost/", handler.GetMostPopularCourses)
 
 	router.Run(":8090")
 	return router

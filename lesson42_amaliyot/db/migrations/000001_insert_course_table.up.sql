@@ -1,0 +1,1 @@
+create table if not exists users(id serial,name varchar,age int, year int)

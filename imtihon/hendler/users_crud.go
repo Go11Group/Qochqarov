@@ -17,6 +17,7 @@ func (h *Handler) UserGets(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": " USER MALUMOTLARINI CHIQARISHFA HATOLIK"})
 	}
 
+	
 	for _, v := range user {
 		c.JSON(http.StatusOK, v)
 	}
@@ -50,8 +51,8 @@ func (h *Handler) UserPut(c *gin.Context) {
 // bu api id boyicha databasesdagi userslarni ochiradi
 
 func (h *Handler) UserDelete(c *gin.Context) {
-	id := c.Param("id")
-
+	id := c.Query("id")
+	fmt.Println(id)
 	err := h.Userss.UserDelete(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": " USERNI MALUMOTLARINI OCJHIRISHDA HATOLIK"})
