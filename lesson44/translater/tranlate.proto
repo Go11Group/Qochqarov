@@ -1,0 +1,19 @@
+syntax ="proto3";
+
+option go_package="my_mod/translater/tranlate";
+
+package translater;
+
+service Translater{
+    rpc GetTranslaterText(RequeTranslater) returns (ResponceTrablater){};
+
+}
+
+message RequeTranslater{  
+   repeated string strUzb=1;
+
+}
+
+message ResponceTrablater{
+    map<string,string> strEng=1;
+}
