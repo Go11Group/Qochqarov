@@ -1,0 +1,46 @@
+syntax="proto3";
+
+option go_package="my_mod/library";
+
+package library;
+
+service LibraryServer{
+    rpc AddBook (AddBookRequest) returns (AddBookRespons);
+    rpc SearchBook (SearchBookRequest) returns (SearchBookRespons);
+    rpc BorrowBook (BorrowBookRequest) returns (BorrowBookRespons);
+
+}
+
+message AddBookRequest{
+    string Titile=1;
+    string Author=2;
+    int32 Year=3;
+}
+
+message AddBookRespons{
+    string BookId=1;
+}
+
+message SearchBookRequest{
+    string  Query=1;
+}
+
+message SearchBookRespons{
+    repeated Book Books=1;
+}
+
+message BorrowBookRequest{
+    string BookId=1;
+    string UserId=2;
+}
+
+message BorrowBookRespons{
+    bool succes=1;
+}
+
+message Book{
+    string Title=1;
+    string BookId=2;
+    string Author=3;
+    int32  YearPublishet=4;
+}
