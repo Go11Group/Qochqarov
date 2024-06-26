@@ -12,19 +12,31 @@ type Server struct {
 	Library *postgres.LibarySorage
 }
 
-func (s *Server) AddBook(ctx *context.Context, r *pb.AddBookRequest) (*pb.AddBookRespons, error) {
+func (s *Server) AddBook(ctx context.Context, r *pb.AddBookRequest) (*pb.AddBookRespons, error) {
 	id, err := s.Library.LibaryCreate(r)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.AddBookRespons{BookId: *id}, context.Background().Err()
+	return &pb.AddBookRespons{BookId: *id}, nil
 }
 
-func (s *Server) SearchBook(ctx *context.Context, r *pb.SearchBookRequest) (*pb.SearchBookRespons, error) {
+func (s *Server) SearchBook(ctx context.Context, r *pb.SearchBookRequest) (*pb.SearchBookRespons, error) {
+	book, err := s.Library.LIbaryGet(r.Query)
 
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.SearchBookRespons{Books: book}, nil
 }
 
-func (s *Server) BorrowBook(ctx *context.Context, r *pb.BorrowBookRequest) (*pb.BorrowBookRespons, error) {
+func (s *Server) BorrowBook(ctx context.Context, r *pb.BorrowBookRequest) (*pb.BorrowBookRespons, error) {
+	borw,err:=s.Library.LibaryBorrow(r)
 
+	if err != nil {
+		return nil, err
+	}
+
+	return borw,nil
 }
