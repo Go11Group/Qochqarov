@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
-	"my_mod/library"
-	"my_mod/method"
+	"my_mod/protos"
+	"my_mod/servece"
 	"my_mod/postgres"
 	"net"
 

@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"database/sql"
-	"my_mod/library"
+	"my_mod/protos"
 )
 
 type LibarySorage struct {
@@ -16,7 +16,7 @@ func NewLibraryStorage(db *sql.DB) *LibarySorage {
 func (l *LibarySorage) LibaryCreate(books *library.AddBookRequest) (*string, error) {
 	var id string
 
-	 l.Db.QueryRow("INSERT INTO Book (Title, Author, Year) VALUES ($1, $2, $3) RETURNING book_id", books.Titile, books.Author, books.Year).Scan(&id)
+	l.Db.QueryRow("INSERT INTO Book (Title, Author, Year) VALUES ($1, $2, $3) RETURNING book_id", books.Titile, books.Author, books.Year).Scan(&id)
 	return &id, nil
 }
 
@@ -49,6 +49,6 @@ func (l *LibarySorage) LibaryBorrow(ids *library.BorrowBookRequest) (*library.Bo
 	secces := false
 
 	err := l.Db.QueryRow("update book set user_Id=$1 , borrow=true where book_id=$2 returning true", ids.UserId, ids.BookId).Scan(&secces)
-	
+
 	return &library.BorrowBookRespons{Succes: secces}, err
 }

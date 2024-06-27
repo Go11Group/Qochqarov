@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	pb "my_mod/library"
+	pb "my_mod/protos"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

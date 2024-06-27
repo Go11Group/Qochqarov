@@ -2,7 +2,7 @@ package method
 
 import (
 	"context"
-	pb "my_mod/library"
+	pb "my_mod/protos"
 	"my_mod/postgres"
 )
 
@@ -32,11 +32,11 @@ func (s *Server) SearchBook(ctx context.Context, r *pb.SearchBookRequest) (*pb.S
 }
 
 func (s *Server) BorrowBook(ctx context.Context, r *pb.BorrowBookRequest) (*pb.BorrowBookRespons, error) {
-	borw,err:=s.Library.LibaryBorrow(r)
+	borw, err := s.Library.LibaryBorrow(r)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return borw,nil
+	return borw, nil
 }

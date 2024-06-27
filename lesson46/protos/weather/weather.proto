@@ -1,0 +1,49 @@
+syntax= "proto3";
+
+option go_package="./generated/wheather";
+
+package protos;
+
+service WitherServer{
+   rpc GetCurrentWeather(CurrentWeatherRequest) returns (CurrentWeatherRespons);
+
+   rpc GetWeatherForecast(WeatherForecastRequest) returns (WeatherForecastRespons);
+
+   rpc ReportWeatherCondition(IsTrafficRequest) returns (IsTraficRespons);
+}
+
+
+message CurrentWeatherRequest{
+    string location=1;
+}
+
+message CurrentWeatherRespons{
+    string Temprature=2;
+    string Humidity=3;
+    string Wind=4;
+}
+
+
+message WeatherForecastRequest{
+    string Location=1;
+    int32  day=2;
+}
+
+message WeatherForecastRespons{
+    repeated WeatherForecast forecasts = 1;
+}
+
+message WeatherForecast{
+    string date=1;
+    string temperature=2;
+    string condition =3;
+}
+
+message IsTrafficRequest{
+    string location=1;
+    string date=2;
+}
+
+message IsTraficRespons{
+    string Condition=1;
+}
