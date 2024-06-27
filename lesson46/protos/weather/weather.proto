@@ -14,7 +14,7 @@ service WitherServer{
 
 
 message CurrentWeatherRequest{
-    string location=1;
+    string Location=1;
 }
 
 message CurrentWeatherRespons{
