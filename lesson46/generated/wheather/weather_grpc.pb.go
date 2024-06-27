@@ -37,7 +37,7 @@ func NewWitherServerClient(cc grpc.ClientConnInterface) WitherServerClient {
 
 func (c *witherServerClient) GetCurrentWeather(ctx context.Context, in *CurrentWeatherRequest, opts ...grpc.CallOption) (*CurrentWeatherRespons, error) {
 	out := new(CurrentWeatherRespons)
-	err := c.cc.Invoke(ctx, "/protos.WitherServer/GetCurrentWeather", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/weather.WitherServer/GetCurrentWeather", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *witherServerClient) GetCurrentWeather(ctx context.Context, in *CurrentW
 
 func (c *witherServerClient) GetWeatherForecast(ctx context.Context, in *WeatherForecastRequest, opts ...grpc.CallOption) (*WeatherForecastRespons, error) {
 	out := new(WeatherForecastRespons)
-	err := c.cc.Invoke(ctx, "/protos.WitherServer/GetWeatherForecast", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/weather.WitherServer/GetWeatherForecast", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *witherServerClient) GetWeatherForecast(ctx context.Context, in *Weather
 
 func (c *witherServerClient) ReportWeatherCondition(ctx context.Context, in *IsTrafficRequest, opts ...grpc.CallOption) (*IsTraficRespons, error) {
 	out := new(IsTraficRespons)
-	err := c.cc.Invoke(ctx, "/protos.WitherServer/ReportWeatherCondition", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/weather.WitherServer/ReportWeatherCondition", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func _WitherServer_GetCurrentWeather_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.WitherServer/GetCurrentWeather",
+		FullMethod: "/weather.WitherServer/GetCurrentWeather",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WitherServerServer).GetCurrentWeather(ctx, req.(*CurrentWeatherRequest))
@@ -126,7 +126,7 @@ func _WitherServer_GetWeatherForecast_Handler(srv interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.WitherServer/GetWeatherForecast",
+		FullMethod: "/weather.WitherServer/GetWeatherForecast",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WitherServerServer).GetWeatherForecast(ctx, req.(*WeatherForecastRequest))
@@ -144,7 +144,7 @@ func _WitherServer_ReportWeatherCondition_Handler(srv interface{}, ctx context.C
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.WitherServer/ReportWeatherCondition",
+		FullMethod: "/weather.WitherServer/ReportWeatherCondition",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WitherServerServer).ReportWeatherCondition(ctx, req.(*IsTrafficRequest))
@@ -156,7 +156,7 @@ func _WitherServer_ReportWeatherCondition_Handler(srv interface{}, ctx context.C
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var WitherServer_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protos.WitherServer",
+	ServiceName: "weather.WitherServer",
 	HandlerType: (*WitherServerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

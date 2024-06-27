@@ -2,7 +2,7 @@ syntax= "proto3";
 
 option go_package="./generated/wheather";
 
-package protos;
+package weather;
 
 service WitherServer{
    rpc GetCurrentWeather(CurrentWeatherRequest) returns (CurrentWeatherRespons);
