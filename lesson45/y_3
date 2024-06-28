@@ -1,0 +1,22 @@
+               List of relations
+ Schema |       Name        | Type  |  Owner   
+--------+-------------------+-------+----------
+ public | schema_migrations | table | postgres
+(1 row)
+
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ garilla   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ go        | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ imtihon   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ oy_3      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ sql       | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ weather   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+(9 rows)
+

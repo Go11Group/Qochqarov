@@ -51,5 +51,7 @@ func main() {
 		Discription: "kjirjghrekrwmr",
 	}
 
-	respTraf,err:=c.ReportTrafficJam()
+	respTraf,err:=c.ReportTrafficJam(contex,&reqTraf)
+
+	fmt.Println(respTraf)
 }
