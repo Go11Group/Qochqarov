@@ -11,6 +11,7 @@ type Handler struct {
 }
 
 func NewHendler(weather wheather.WitherServerClient, transport bus.TransportServiceClient) *Handler {
+
 	return &Handler{
 		Transport: transport,
 		Weather:   weather,

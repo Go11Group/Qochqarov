@@ -1,1 +1,1 @@
-create table bekat(bus_number VARCHAR references TRANSPORT,astanofka VARCHAR)
+create table bekat(bus_number VARCHAR references TRANSPORT(TRANSPORT_NUMBER),bekat VARCHAR)
