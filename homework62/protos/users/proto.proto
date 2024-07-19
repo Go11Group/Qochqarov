@@ -6,7 +6,7 @@ package protos;
 service UserService{
     rpc CresteUser(CresteUserRequest) returns (CresteUserResponse);
 
-    rpc GetAllUser(GetAllUserRequest) returns (GetAllUserResponse);
+    rpc GetByIdUser(GetByIdUserRequest) returns (GetByIdUserResponse);
 
     rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 
@@ -25,11 +25,11 @@ message CresteUserResponse{
     bool success=1;
 }
 
-message GetAllUserRequest{
+message GetByIdUserRequest{
     string user_id=1;
 }
 
-message GetAllUserResponse{
+message GetByIdUserResponse{
     string user_id=1;
     string name=2;
     string age=3;

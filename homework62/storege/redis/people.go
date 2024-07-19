@@ -33,13 +33,13 @@ func (repo *UserRepo) Create(in *pb.CresteUserRequest) (*pb.CresteUserResponse, 
 	return &pb.CresteUserResponse{}, nil
 }
 
-func (repo *UserRepo) GetAllUser(in *pb.GetAllUserRequest) (*pb.GetAllUserResponse, error) {
+func (repo *UserRepo) GetByIdUser(in *pb.GetByIdUserRequest) (*pb.GetByIdUserResponse, error) {
 	val, err := repo.RD.Get(context.Background(), in.UserId).Result()
 	if err != nil {
 		log.Fatalf("Redisdan ma'lumot olishda xatolik: %v", err)
 	}
 
-	var user pb.GetAllUserResponse
+	var user pb.GetByIdUserResponse
 	err = json.Unmarshal([]byte(val), &user)
 	if err != nil {
 		return nil, err

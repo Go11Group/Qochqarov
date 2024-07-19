@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	CresteUser(ctx context.Context, in *CresteUserRequest, opts ...grpc.CallOption) (*CresteUserResponse, error)
-	GetAllUser(ctx context.Context, in *GetAllUserRequest, opts ...grpc.CallOption) (*GetAllUserResponse, error)
+	GetByIdUser(ctx context.Context, in *GetByIdUserRequest, opts ...grpc.CallOption) (*GetByIdUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserrequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 }
@@ -45,9 +45,9 @@ func (c *userServiceClient) CresteUser(ctx context.Context, in *CresteUserReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetAllUser(ctx context.Context, in *GetAllUserRequest, opts ...grpc.CallOption) (*GetAllUserResponse, error) {
-	out := new(GetAllUserResponse)
-	err := c.cc.Invoke(ctx, "/protos.UserService/GetAllUser", in, out, opts...)
+func (c *userServiceClient) GetByIdUser(ctx context.Context, in *GetByIdUserRequest, opts ...grpc.CallOption) (*GetByIdUserResponse, error) {
+	out := new(GetByIdUserResponse)
+	err := c.cc.Invoke(ctx, "/protos.UserService/GetByIdUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *userServiceClient) UpdateUser(ctx context.Context, in *UpdateUserreques
 // for forward compatibility
 type UserServiceServer interface {
 	CresteUser(context.Context, *CresteUserRequest) (*CresteUserResponse, error)
-	GetAllUser(context.Context, *GetAllUserRequest) (*GetAllUserResponse, error)
+	GetByIdUser(context.Context, *GetByIdUserRequest) (*GetByIdUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserrequest) (*UpdateUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -90,8 +90,8 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) CresteUser(context.Context, *CresteUserRequest) (*CresteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CresteUser not implemented")
 }
-func (UnimplementedUserServiceServer) GetAllUser(context.Context, *GetAllUserRequest) (*GetAllUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllUser not implemented")
+func (UnimplementedUserServiceServer) GetByIdUser(context.Context, *GetByIdUserRequest) (*GetByIdUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetByIdUser not implemented")
 }
 func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -130,20 +130,20 @@ func _UserService_CresteUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetAllUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllUserRequest)
+func _UserService_GetByIdUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByIdUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetAllUser(ctx, in)
+		return srv.(UserServiceServer).GetByIdUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.UserService/GetAllUser",
+		FullMethod: "/protos.UserService/GetByIdUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetAllUser(ctx, req.(*GetAllUserRequest))
+		return srv.(UserServiceServer).GetByIdUser(ctx, req.(*GetByIdUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,8 +196,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_CresteUser_Handler,
 		},
 		{
-			MethodName: "GetAllUser",
-			Handler:    _UserService_GetAllUser_Handler,
+			MethodName: "GetByIdUser",
+			Handler:    _UserService_GetByIdUser_Handler,
 		},
 		{
 			MethodName: "DeleteUser",
