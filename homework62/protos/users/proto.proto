@@ -15,9 +15,9 @@ service UserService{
 
 message CresteUserRequest{
     string name=1;
-    string age=2;
+    int32 age=2;
     string gendor=3;
-    string year=4;
+    int32 year=4;
     string id=5;
 }
 

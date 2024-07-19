@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	pb "my_mod/generated/users"
 	"net/http"
 
@@ -9,7 +10,8 @@ import (
 
 func (h *Handler) CresteUserHandler(ctx *gin.Context) {
 	var req pb.CresteUserRequest
-
+	
+	
 	if err := ctx.ShouldBind(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "erro",
@@ -17,8 +19,11 @@ func (h *Handler) CresteUserHandler(ctx *gin.Context) {
 		return
 	}
 
+	
+	
 	_, err := h.User.CresteUser(ctx, &req)
 	if err != nil {
+		fmt.Println("salomlar")
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})

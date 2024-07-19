@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	pb "my_mod/generated/users"
 	"my_mod/storege/redis"
 )
@@ -12,6 +13,7 @@ type UserService struct{
 }
 
 func NewUserRepo(user *redis.UserRepo) *UserService  {
+	fmt.Println("alik")
 	return &UserService{UserRepo: user}
 }
 
