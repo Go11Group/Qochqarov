@@ -2,11 +2,12 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
+	"log"
 	pb "my_mod/generated/users"
-	"my_mod/storege/redis"
 	"time"
 
-	"github.com/redis/go-redis"
+	"github.com/redis/go-redis/v9"
 )
 
 type UserRepo struct {
@@ -16,7 +17,6 @@ type UserRepo struct {
 func NewUserRepo(rd *redis.Client) *UserRepo {
 	return &UserRepo{RD: rd}
 }
-
 
 func (repo *UserRepo) Create(in *pb.CresteUserRequest) (*pb.CresteUserResponse, error) {
 	var t time.Time
@@ -28,8 +28,38 @@ func (repo *UserRepo) Create(in *pb.CresteUserRequest) (*pb.CresteUserResponse, 
 		"year":   in.Year,
 	}
 
-	repo.RD.HSet(context.Background(), in.Name, maps)
-	repo.RD.Expire(context.Background(), in.Name, time.Duration(t.Add(30*time.Minute).Unix()))
+	repo.RD.Set(context.Background(), in.Id, maps, time.Duration(t.Add(30*time.Minute).Unix()))
 
 	return &pb.CresteUserResponse{}, nil
+}
+
+func (repo *UserRepo) GetAllUser(in *pb.GetAllUserRequest) (*pb.GetAllUserResponse, error) {
+	val, err := repo.RD.Get(context.Background(), in.UserId).Result()
+	if err != nil {
+		log.Fatalf("Redisdan ma'lumot olishda xatolik: %v", err)
+	}
+
+	var user pb.GetAllUserResponse
+	err = json.Unmarshal([]byte(val), &user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+
+}
+
+func (repo *UserRepo) DeketeUser(id string) (*pb.DeleteUserResponse, error) {
+	err := repo.RD.Del(context.Background(), id).Err()
+	return &pb.DeleteUserResponse{Success: true}, err
+}
+
+func (repo *UserRepo) UpdateUser(in *pb.UpdateUserrequest) (*pb.UpdateUserResponse, error) {
+
+	user, err := json.Marshal(in)
+	if err != nil {
+		return &pb.UpdateUserResponse{Success: false}, err
+	}
+	err = repo.RD.Set(context.Background(), in.UserId, user, 0).Err()
+	return &pb.UpdateUserResponse{Success: true}, err
 }

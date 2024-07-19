@@ -18,6 +18,7 @@ message CresteUserRequest{
     string age=2;
     string gendor=3;
     string year=4;
+    string id=5;
 }
 
 message CresteUserResponse{
