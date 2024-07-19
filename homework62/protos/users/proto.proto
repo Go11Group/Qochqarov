@@ -1,0 +1,57 @@
+syntax="proto3";
+
+option go_package ="generated/users/";
+package protos;
+
+service UserService{
+    rpc CresteUser(CresteUserRequest) returns (CresteUserResponse);
+
+    rpc GetAllUser(GetAllUserRequest) returns (GetAllUserResponse);
+
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+
+    rpc UpdateUser(UpdateUserrequest) returns (UpdateUserResponse);
+}
+
+message CresteUserRequest{
+    string name=1;
+    string age=2;
+    string gendor=3;
+    string year=4;
+}
+
+message CresteUserResponse{
+    bool success=1;
+}
+
+message GetAllUserRequest{
+    string user_id=1;
+}
+
+message GetAllUserResponse{
+    string user_id=1;
+    string name=2;
+    string age=3;
+    string gendor=4;
+    string year=5;
+}
+
+message DeleteUserRequest{
+    string user_id=1;
+}
+
+message DeleteUserResponse{
+    bool success=1;
+}
+
+message UpdateUserrequest{
+    string user_id=1;
+    string name=2;
+    string age=3;
+    string gendor=4;
+    string year=5;
+}
+
+message UpdateUserResponse{
+    bool success=1;
+}
